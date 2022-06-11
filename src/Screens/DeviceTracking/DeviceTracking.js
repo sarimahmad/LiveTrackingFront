@@ -23,6 +23,9 @@ const DeviceTracking = ({ navigation }) => {
       console.log('Current Postion', currentPosition);
     };
 
+    return ()=>{
+    
+    }
   },[])
 
   

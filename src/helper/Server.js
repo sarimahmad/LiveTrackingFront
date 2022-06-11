@@ -1,5 +1,5 @@
 const Server = {
-  local: 'http://cdb5-39-46-92-250.ngrok.io',
+  local: 'http://5af6-39-46-31-161.ngrok.io',
 };
 
 export default Server.local;

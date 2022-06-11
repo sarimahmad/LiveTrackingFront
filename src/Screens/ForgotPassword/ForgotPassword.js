@@ -3,28 +3,23 @@ import React, { useState } from 'react'
 import NavigationStrings from '../../Constants/NavigationStrings';
 import CustomButton from '../../Components/CustomButton/CustomButton';
 import CustomInput from '../../Components/CustomInput/CustomInput';
-import axios from 'axios';
+import { CheckUSer } from '../../helper/api';
 
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState('');
 
-  const onSendPressed = () => {
-    let url = "http://127.0.0.1:8000/api/auth/password/reset/"
-    const user = {
-        email: email,
-    };
+  const UserExits = async ()=>{
+    let data ={email: email}
+    await CheckUSer(data).then(response=>{
+      if (response && response.status ===200){
+        navigation.navigate(NavigationStrings.CHANGEPASSWORD,{email:email});
+      }else{
+        alert("Email Does't Exits");
+      }
+    });
+  }
 
-    axios.post(url, user)
-    .then(response => response?.token ? navigation.navigate(NavigationStrings.CHANGEPASSWORD) : console.warn("Incorrect Email")
-    )
-  };
-
-  const onSignInPressed = () => {
-  //  console.warn('onSignInPressed');
-
-    navigation.navigate(NavigationStrings.SIGNIN)
-  };
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
@@ -41,14 +36,14 @@ const ForgotPassword = ({ navigation }) => {
 
         <CustomButton
           text="Send"
-          onPress={onSendPressed}
+          onPress={UserExits}
           bgColor="pink"
           fgColor="black"
         />
 
         <CustomButton
           text="Back to Sign In"
-          onPress={onSignInPressed}
+          onPress={()=> navigation.navigate(NavigationStrings.SIGNIN)}
           fgColor="red"
 
         />

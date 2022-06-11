@@ -3,14 +3,34 @@ import React, { useState } from 'react'
 import NavigationStrings from '../../Constants/NavigationStrings';
 import CustomButton from '../../Components/CustomButton/CustomButton';
 import CustomInput from '../../Components/CustomInput/CustomInput';
+import { ChangePasswordAPi } from '../../helper/api';
 
-const ChangePassword = ({ navigation }) => {
+const ChangePassword = ({ navigation,route}) => {
+
+
+    React.useEffect(()=>{
+        let email = route.params.email;
+        setEmail(email)
+    },[])
+
    
     const [newPassword, setNewPassword] = useState('');
+    const [email, setEmail] = useState('');
 
-    const onSubmitPressed = () => {
-       // console.warn('Submit');
-        navigation.navigate(NavigationStrings.SIGNIN)
+    const onSubmitPressed = async () => {
+        let data ={
+            email: email,
+           new_password: newPassword
+        }
+        await ChangePasswordAPi(data).then(response=>{
+            if (response && response.status ===200){
+                alert("Your Password has Been Changed")
+              navigation.navigate(NavigationStrings.SIGNIN);
+              
+            }else{
+              alert("Something Went Wrong");
+            }
+          });
     };
 
     const onSignInPressed = () => {

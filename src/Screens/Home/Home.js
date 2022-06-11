@@ -13,6 +13,8 @@ const Home = ({ navigation }) => {
     longitude: 74.2106
   });
   const ws = useRef(null);
+  const lastVal = useRef(null);
+  const send = useRef(null);
 
   React.useEffect(() => {
     (async () => {
@@ -33,11 +35,13 @@ const Home = ({ navigation }) => {
       }
 
       const interval = setInterval( async ()=>{
-        let location = await Location.getCurrentPositionAsync({});
-        let obj = {latitude: location.coords.latitude, longitude: location.coords.longitude}
-        setPin(obj);
-        ws.current.send(JSON.stringify(obj));
-
+        sendData();
+        if (send.current){
+          return
+        }
+        setPin(lastVal.current);
+        ws.current.send(JSON.stringify(lastVal.current));
+        send.current = true;
       },1500)
 
       return ()=>{
@@ -45,6 +49,12 @@ const Home = ({ navigation }) => {
       }
     })();
   }, []);
+
+  const sendData = async ()=>{
+    let location = await Location.getCurrentPositionAsync({});
+        lastVal.current = {latitude: location.coords.latitude, longitude: location.coords.longitude}
+        send.current = false
+  }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
