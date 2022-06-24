@@ -8,7 +8,10 @@ import {SignUpform} from '../../helper/api'
 
 const SignUp = ({ navigation }) => {
 
+    const [firstname, setfirstname] = useState('');
+    const [lastname, setlastname] = useState('');
     const [email, setEmail] = useState('');
+    const [number, setnumber] = useState('');
     const [password, setPassword] = useState('');
     const [passwordRepeat, setPasswordRepeat] = useState('');
     const { height } = useWindowDimensions();
@@ -16,6 +19,9 @@ const SignUp = ({ navigation }) => {
     const Login = async ()=>{
 
         let data ={
+            first_name:firstname,
+            last_name:lastname,
+            number:number,
             email: email,
             password: password,
         }
@@ -40,11 +46,25 @@ const SignUp = ({ navigation }) => {
             <View style={styles.root}>
                 <Text style={styles.title}>Create Account</Text>
 
-               
+                <CustomInput
+                    placeholder="First Name"
+                    value={firstname}
+                    setValue={setfirstname}
+                />
+                <CustomInput
+                    placeholder="Last Name"
+                    value={lastname}
+                    setValue={setlastname}
+                />
                 <CustomInput
                     placeholder="Email"
                     value={email}
                     setValue={setEmail}
+                />
+                <CustomInput
+                    placeholder="number"
+                    value={number}
+                    setValue={setnumber}
                 />
                 <CustomInput
                     placeholder="Password"

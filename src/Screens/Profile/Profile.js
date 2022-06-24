@@ -1,80 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
 import NavigationStrings from '../../Constants/NavigationStrings'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../../Components/CustomButton/CustomButton'
 import CustomInput from '../../Components/CustomInput/CustomInput';
-import axios from 'axios';
-
+import {GetProfile} from '../../helper/api';
 
 const Profile = ({ navigation }) => {
 
 
-    const [first_name, setFirstName] = useState('');
-    const [last_name, setLastName] = useState('');
-    const [homeaddress, setHomeaddress] = useState('');
-    const [DOB, setDOB] = useState('');
-
+    const [data, setdata] = useState('');
+  
     const { height } = useWindowDimensions();
-
-    const onSubmitPressed = () => {
-        let url = "http://127.0.0.1:8000/api/profile/"
-    const user = {
-        first_name: first_name,
-        last_name: last_name,
-        homeaddress: homeaddress,
-        DOB: DOB
-    };
-
-    axios.post(url, user)
-    .then(response => response?.token ? navigation.navigate(NavigationStrings.HOME) : console.warn("Incorrect Email or password")
-    )
-       // navigation.navigate(NavigationStrings.HOME)
-    };
-
+ 
+    useEffect(async ()=>{
+        let id = await AsyncStorage.getItem('profile')
+        id = JSON.parse(id);
+        console.log("helloo",id);
+        await GetProfile(id.id).then(response=>{
+            console.log("data==> ",response.data.user);
+            if(response.status===200){
+                setdata(response.data.user);
+            }else{
+                alert("Some thing went Wrong");
+            }
+        });
+    },[])
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
-
-
-                
-
                 <Image
                    style={styles.logo}
                    source={require('../../../assets/Images/avatar.png')} />
 
-                   
-
-                <CustomInput
-                    placeholder="First Name"
-                    value={first_name}
-                    setValue={setFirstName}
-                />
-
-                <CustomInput
-                    placeholder="Last Name"
-                    value={last_name}
-                    setValue={setLastName}
-                />
-                <CustomInput
-                    placeholder="HomeAddress"
-                    value={homeaddress}
-                    setValue={setHomeaddress}
-                    secureTextEntry
-                />
-                <CustomInput
-                    placeholder="DOB"
-                    value={DOB}
-                    setValue={setDOB}
-                    secureTextEntry
-                />
-                
-                <CustomButton
-                    text="Submit"
-                    onPress={onSubmitPressed}
-                    bgColor="pink"
-                    fgColor="black"
-                />
+                    <Text style={{marginTop: 20}}>First Name: <Text>{data.first_name}</Text></Text>
+                    <Text style={{marginTop: 20}}>last Name: <Text>{data.last_name}</Text></Text>
+                    <Text style={{marginTop: 20}}>Email:  <Text>{data.email}</Text></Text>
+                    <Text style={{marginTop: 20}}>Number: <Text>{data.number}</Text></Text>
+              
 
 
 
@@ -87,13 +50,13 @@ const Profile = ({ navigation }) => {
 const styles = StyleSheet.create({
 
     root: {
-        alignItems: 'center',
         padding: 50,
     },
     logo: {
 
         height: 200,
         width: 200,
+        alignSelf:'center',
         marginTop: 20
       }
 });

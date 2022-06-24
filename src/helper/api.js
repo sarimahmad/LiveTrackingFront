@@ -85,3 +85,23 @@ export async function ChangePasswordAPi(data) {
     });
   return GetResponse;
 }
+
+export async function GetProfile(id) {
+  var config = {
+    method: 'get',
+    url: `${Server}/Profile/${id}`,
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  };
+
+  const GetResponse = await axios(config)
+    .then(function (response) {
+      return response;
+    })
+    .catch(function (error) {
+      return error.response;
+    });
+  return GetResponse;
+}
